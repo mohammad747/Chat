@@ -8,11 +8,21 @@ package GUI;
  */
 
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+
 /**
  *
  * @author Mozen
  */
 public class JFrame_client extends javax.swing.JFrame {
+    /**
+     * declare socket, input ,output for connectin
+     */
+    static Socket s;
+    static DataInputStream din;
+    static DataOutputStream dout;
 
     /**
      * Creates new form NewJFrame
@@ -109,13 +119,31 @@ public class JFrame_client extends javax.swing.JFrame {
                 new JFrame_client().setVisible(true);
             }
         });
+
+        try{
+            s = new Socket("localhost",1201);
+            din = new DataInputStream(s.getInputStream());
+            dout = new DataOutputStream(s.getOutputStream());
+
+            String msgin = "";
+            while (!msgin.equals("exit")){
+                msgin = din.readUTF();
+                jTextArea_client.setText(jTextArea_client.getText().trim() +
+                        "\n" + msgin);
+
+            }
+
+
+        }catch (Exception e){
+
+        }
     }
 
     // Variables declaration - do not modify
     private javax.swing.JButton jButton_client;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea_client;
-    private javax.swing.JTextField jTextField_client;
+    private static javax.swing.JTextArea jTextArea_client;
+    private static javax.swing.JTextField jTextField_client;
     // End of variables declaration
 }
 
