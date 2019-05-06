@@ -8,8 +8,11 @@ package GUI;
  */
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -20,6 +23,7 @@ public class JFrame_client extends javax.swing.JFrame {
     /**
      * declare socket, input ,output for connectin
      */
+    // declare streams and socket
     static Socket s;
     static DataInputStream din;
     static DataOutputStream dout;
@@ -46,6 +50,9 @@ public class JFrame_client extends javax.swing.JFrame {
         jButton_client = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTextArea_client.setEditable(false);
+        setjButton_client_action();
 
         jTextArea_client.setColumns(20);
         jTextArea_client.setRows(5);
@@ -85,6 +92,23 @@ public class JFrame_client extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
+    // Send message from client to server
+    private static void setjButton_client_action(){
+        jButton_client.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msgout = "";
+                jTextArea_client.setText(jTextField_client.getText());
+                msgout = jTextField_client.getText().trim();
+                try {
+                    dout.writeUTF(msgout);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }// end of action button
+
     /**
      * @param args the command line arguments
      */
@@ -121,10 +145,12 @@ public class JFrame_client extends javax.swing.JFrame {
         });
 
         try{
+            // initialize streams and socket for connect server
             s = new Socket("localhost",1201);
             din = new DataInputStream(s.getInputStream());
             dout = new DataOutputStream(s.getOutputStream());
 
+            // print message in text area
             String msgin = "";
             while (!msgin.equals("exit")){
                 msgin = din.readUTF();
@@ -135,16 +161,17 @@ public class JFrame_client extends javax.swing.JFrame {
 
 
         }catch (Exception e){
-
+            e.getMessage();
+            e.getStackTrace();
         }
     }
 
     // Variables declaration - do not modify
-    private javax.swing.JButton jButton_client;
+    private static javax.swing.JButton jButton_client;
     private javax.swing.JScrollPane jScrollPane1;
     private static javax.swing.JTextArea jTextArea_client;
     private static javax.swing.JTextField jTextField_client;
     // End of variables declaration
-}
+}// end of JFrame client class
 
 
