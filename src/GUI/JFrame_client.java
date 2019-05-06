@@ -154,11 +154,9 @@ public class JFrame_client extends javax.swing.JFrame {
             String msgin = "";
             while (!msgin.equals("exit")){
                 msgin = din.readUTF();
-                jTextArea_client.setText(jTextArea_client.getText().trim() +
-                        "\n" + msgin);
+                jTextArea_client.setText(jTextArea_client.getText().trim() + "\n" + msgin);
 
             }
-
 
         }catch (Exception e){
             e.getMessage();
