@@ -52,6 +52,7 @@ public class JFrame_client extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea_client.setEditable(false);
+        setTitle("Client");
         setjButton_client_action();
 
         jTextArea_client.setColumns(20);
@@ -98,8 +99,9 @@ public class JFrame_client extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String msgout = "";
-                jTextArea_client.setText(jTextField_client.getText());
+                //jTextArea_client.setText();
                 msgout = jTextField_client.getText().trim();
+                jTextArea_client.append("\nClient: " + msgout);
                 try {
                     dout.writeUTF(msgout);
                 } catch (IOException ex) {
@@ -154,7 +156,9 @@ public class JFrame_client extends javax.swing.JFrame {
             String msgin = "";
             while (!msgin.equals("exit")){
                 msgin = din.readUTF();
-                jTextArea_client.setText(jTextArea_client.getText().trim() + "\n" + msgin);
+
+                jTextArea_client.setText(jTextArea_client.getText().trim() + "\nServer: " + msgin);
+
 
             }
 
