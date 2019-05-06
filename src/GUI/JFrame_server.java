@@ -7,6 +7,9 @@ package GUI;
  */
 
 import javax.imageio.IIOException;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -53,6 +56,10 @@ public class JFrame_server extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTextArea_server.setEditable(false);
+
+        jButton_server_action();
+
 
         jTextArea_server.setColumns(20);
         jTextArea_server.setRows(5);
@@ -93,6 +100,26 @@ public class JFrame_server extends javax.swing.JFrame {
     }// </editor-fold>
 
     /**
+     * Sending the server message to the client
+     *
+     */
+    private static void jButton_server_action(){
+        jButton_server.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msout = "";
+                msout = jTextField_server.getText().trim();
+                try {
+                    dout.writeUTF(msout);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -125,9 +152,10 @@ public class JFrame_server extends javax.swing.JFrame {
                 new JFrame_server().setVisible(true);
             }
         });
+
         //The message
         String msgin = "";
-        //String msgout = "";
+
 
         try{
             //Listen for client to connect
@@ -138,8 +166,9 @@ public class JFrame_server extends javax.swing.JFrame {
             dout = new DataOutputStream(s.getOutputStream());
             //Chat will continue until someone type 'exit'
             while (!msgin.equals("exit")){
+                //get the client message
                 msgin = din.readUTF();
-                //msgout = dout.writeUTF(jTextField_server.getText());
+                //Added server's message and client's message to the text area
                 jTextArea_server.setText(jTextField_server.getText().trim()+"\n");
                 jTextArea_server.setText(jTextArea_server.getText().trim()+"\n"+msgin);
             }
@@ -149,12 +178,16 @@ public class JFrame_server extends javax.swing.JFrame {
             e.printStackTrace();
         }
 
+
+
+
+
     }//End of main
 
     // Variables declaration - do not modify
-    private javax.swing.JButton jButton_server;
+    private static javax.swing.JButton jButton_server;
     private javax.swing.JScrollPane jScrollPane1;
     private static javax.swing.JTextArea jTextArea_server;
     private static javax.swing.JTextField jTextField_server;
     // End of variables declaration
-}
+}//End of class
