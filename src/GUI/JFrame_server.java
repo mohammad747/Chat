@@ -56,6 +56,10 @@ public class JFrame_server extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTextArea_server.setEditable(false);
+
+        jButton_server_action();
+
 
         jTextArea_server.setColumns(20);
         jTextArea_server.setRows(5);
@@ -97,7 +101,7 @@ public class JFrame_server extends javax.swing.JFrame {
 
     /**
      * Sending the server message to the client
-     * 
+     *
      */
     private static void jButton_server_action(){
         jButton_server.addActionListener(new ActionListener() {
@@ -173,6 +177,8 @@ public class JFrame_server extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
 
 
