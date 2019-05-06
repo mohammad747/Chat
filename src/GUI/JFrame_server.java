@@ -57,6 +57,7 @@ public class JFrame_server extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea_server.setEditable(false);
+        setTitle("SERVER");
 
         jButton_server_action();
 
@@ -109,6 +110,7 @@ public class JFrame_server extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 String msout = "";
                 msout = jTextField_server.getText().trim();
+                jTextArea_server.append("\nServer: "+msout);
                 try {
                     dout.writeUTF(msout);
                 } catch (IOException ex) {
@@ -169,8 +171,7 @@ public class JFrame_server extends javax.swing.JFrame {
                 //get the client message
                 msgin = din.readUTF();
                 //Added server's message and client's message to the text area
-                jTextArea_server.setText(jTextField_server.getText().trim()+"\n");
-                jTextArea_server.setText(jTextArea_server.getText().trim()+"\n"+msgin);
+                jTextArea_server.setText(jTextArea_server.getText().trim()+"\nClient: "+msgin);
             }
         } catch (IIOException e){
             e.getMessage();
