@@ -1,4 +1,6 @@
-package GUI;
+package Client;
+
+import Client.Client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
