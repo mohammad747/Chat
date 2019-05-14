@@ -8,12 +8,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class ServerWorker implements Runnable {
 
     HashMap<String, String> userPass = new HashMap<>();
+    List<String> onlineUsers = new ArrayList<>();
 
     private Socket socket;
     private LoginGUI loginGUI = new LoginGUI();
@@ -37,7 +40,7 @@ public class ServerWorker implements Runnable {
                 DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         ) {
 
-            loginHandelar(output,input);
+            loginHandelar(output, input);
 
             Server.jButton_Server.addActionListener(new ActionListener() {
                 @Override
@@ -48,6 +51,11 @@ public class ServerWorker implements Runnable {
 
 
                     try {
+                        for (String user: onlineUsers
+                             ) {
+                            output.writeUTF(user);
+
+                        }
                         output.writeUTF(messageOut);
                         output.flush();
 
@@ -94,21 +102,15 @@ public class ServerWorker implements Runnable {
     }// end of run method
 
 
-    public void loginHandelar(DataOutputStream outputStream , DataInputStream inputStream) throws IOException{
+    public void loginHandelar(DataOutputStream outputStream, DataInputStream inputStream) throws IOException {
         String user = inputStream.readUTF();
-        String [] u = user.split(":");
-        if(userPass.containsKey(u[0])){
-            if(userPass.containsValue(u[1])){
+        String[] users = user.split(":");
+        if (userPass.containsKey(users[0]) && userPass.get(users[0]).equals(users[1])) {
 
-                outputStream.writeBoolean(true);
-                System.out.println("adfa");
+            outputStream.writeBoolean(true);
+            onlineUsers.add(users[0]);
 
-            }else {
-                outputStream.writeBoolean(false);
-                System.out.println("af");
-            }
-
-        }else {
+        } else {
             outputStream.writeBoolean(false);
         }
 

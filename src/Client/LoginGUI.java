@@ -112,9 +112,8 @@ public class LoginGUI extends javax.swing.JFrame {
 
 
     private void jButton_loginActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        //String[] userPass = {jTextField_username.getText(),jTextField_password.getText()};
 
+        //send data to server
         String user = jTextField_username.getText();
         String pass = jTextField_password.getText();
         String userPass = user + ":" + pass;
@@ -129,6 +128,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 Client client = new Client();
                 client.setTitle(user);
                 setVisible(false);
+                client.sendMessage(socket,inputStream,outputStream);
             }else{
                 JOptionPane.showMessageDialog(null,"Invalid user/pass");
             }

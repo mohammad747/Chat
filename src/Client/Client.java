@@ -96,37 +96,37 @@ public class Client extends javax.swing.JFrame {
     // main method
     public static void main(String args[]) {
 
-        //create object from client class and set visible true
-        Client client = new Client();
-        client.setVisible(true);
-
-
-        try(
-            Socket socket = new Socket("localhost", 8818);
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-        ){
-
-            //call buttonAction method of Client Class
-            client.buttonAction(output);
-            while (true) {
-
-                // assign value of input to a string variable
-                String messageIn = input.readUTF();
-                jTextArea_client.setText(jTextArea_client.getText() + "\nServer: " + messageIn);
-                System.out.println(Thread.currentThread().getName());
-
-                if(messageIn.equals("exit")){
-                    break;
-                }
-            }
-
-        }catch (IOException e){
-            JOptionPane.showMessageDialog(null,e.getMessage() + "\nPlease run server");
-        }
-
 
     } // end of main method
+
+    public void sendMessage(Socket socket, DataInputStream input, DataOutputStream output) throws IOException{
+
+            //call buttonAction method of Client Class
+            this.buttonAction(output);
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+
+                        // assign value of input to a string variable
+                        String messageIn = null;
+                        try {
+                            messageIn = input.readUTF();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        jTextArea_client.setText(jTextArea_client.getText() + "\nServer: " + messageIn);
+                        System.out.println(Thread.currentThread().getName());
+
+                        if(messageIn.equals("exit")){
+                            break;
+                        }
+                    }
+                }
+            });
+            thread.start();
+            
+    }
 
     // Variables declaration - do not modify
      static javax.swing.JButton jButton_client;
