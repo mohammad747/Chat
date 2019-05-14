@@ -106,6 +106,7 @@ public class JFrame_client extends javax.swing.JFrame {
                     dout.writeUTF(msgout);
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                    System.out.println(ex.getMessage());
                 }
             }
         });

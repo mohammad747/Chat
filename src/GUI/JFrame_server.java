@@ -8,8 +8,10 @@ package GUI;
 
 import javax.imageio.IIOException;
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,7 +20,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- *
  * @author mohammad Hashemi
  */
 public class JFrame_server extends javax.swing.JFrame {
@@ -26,11 +27,10 @@ public class JFrame_server extends javax.swing.JFrame {
     /**
      * Defining needed classes
      */
-    static ServerSocket ss;
-    static Socket s;
-    static DataInputStream din;
-    static DataOutputStream dout;
-
+//    static ServerSocket ss;
+//    static Socket s;
+//    static DataInputStream din;
+ //   static DataOutputStream dout;
 
 
     /**
@@ -102,22 +102,9 @@ public class JFrame_server extends javax.swing.JFrame {
 
     /**
      * Sending the server message to the client
-     *
      */
-    private static void jButton_server_action(){
-        jButton_server.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String msout = "";
-                msout = jTextField_server.getText().trim();
-                jTextArea_server.append("\nServer: "+msout);
-                try {
-                    dout.writeUTF(msout);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+    private static void jButton_server_action() {
+
     }
 
 
@@ -155,40 +142,50 @@ public class JFrame_server extends javax.swing.JFrame {
             }
         });
 
-        //The message
-        String msgin = "";
 
 
-        try{
+
+        try(ServerSocket ss = new ServerSocket(1201)) {
             //Listen for client to connect
-            ss = new ServerSocket(1201);
-            s = ss.accept();
-            //Initialize objects with socket input\outPut stream
-            din = new DataInputStream(s.getInputStream());
-            dout = new DataOutputStream(s.getOutputStream());
-            //Chat will continue until someone type 'exit'
-            while (!msgin.equals("exit")){
-                //get the client message
-                msgin = din.readUTF();
-                //Added server's message and client's message to the text area
-                jTextArea_server.setText(jTextArea_server.getText().trim()+"\nClient: "+msgin);
+
+            while (true) {
+
+                new Listener(ss.accept()).start();
+//                Socket s = ss.accept();
+//                jTextArea_server.setText("Client Connected");
+//                //Initialize objects with socket input\outPut stream
+//                din = new DataInputStream(s.getInputStream());
+//                dout = new DataOutputStream(s.getOutputStream());
+//                //get the client message
+//                msgin = din.readUTF();
+//                //Added server's message and client's message to the text area
+//                jTextArea_server.setText(jTextArea_server.getText().trim() + "\nClient: " + msgin);
+//                //Because we need time to switch to the other clients
+//                try {
+//                    Thread.sleep(15000);
+//                } catch (InterruptedException e){
+//                    System.out.println("ooooo Thread Interrupted");
+//                }
+//                if (!msgin.equals("exit")) {
+//                    s.close();
+//                    break;
+//
+//                }
+                //
             }
-        } catch (IIOException e){
-            e.getMessage();
+
+
         } catch (IOException e) {
+            e.getMessage();
             e.printStackTrace();
         }
-
-
-
-
 
     }//End of main
 
     // Variables declaration - do not modify
-    private static javax.swing.JButton jButton_server;
-    private javax.swing.JScrollPane jScrollPane1;
-    private static javax.swing.JTextArea jTextArea_server;
-    private static javax.swing.JTextField jTextField_server;
+    static javax.swing.JButton jButton_server;
+    static javax.swing.JScrollPane jScrollPane1;
+    static javax.swing.JTextArea jTextArea_server;
+    static javax.swing.JTextField jTextField_server;
     // End of variables declaration
 }//End of class
