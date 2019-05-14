@@ -10,15 +10,17 @@ import java.net.Socket;
 
 
 public class Client extends javax.swing.JFrame {
-    private int count;
 
-    {
-        count++;
-    }
 
     // constructor
     public Client() {
         initComponents();
+        setVisible(true);
+    }
+
+    //constructor
+    public Client(Socket socket){
+
     }
 
 
@@ -100,14 +102,7 @@ public class Client extends javax.swing.JFrame {
 
 
         try(
-            Socket socket = new Socket("localhost", 20000);
-
-//                MultiClient multiClient = new MultiClient(socket);
-//                Thread thread = new Thread(multiClient);
-//                jTextArea_client.append("\nConnect to server");
-//            System.out.println(socket.getLocalPort());
-//                thread.start();
-
+            Socket socket = new Socket("localhost", 8818);
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         ){

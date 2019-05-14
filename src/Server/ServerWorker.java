@@ -1,31 +1,43 @@
 package Server;
 
+import Client.LoginGUI;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 
 
-public class MultiThread implements Runnable {
+public class ServerWorker implements Runnable {
+
+    HashMap<String, String> userPass = new HashMap<>();
 
     private Socket socket;
+    private LoginGUI loginGUI = new LoginGUI();
 
-    public MultiThread(Socket socket) {
+    public ServerWorker(Socket socket) {
 
         this.socket = socket;
+        //add user pass to the hash map
+        userPass.put("ali", "123");
+        userPass.put("amir", "123");
+        userPass.put("reza", "123");
+
     }
 
 
     @Override
     public void run() {
-        int port = socket.getPort();
+
         try (
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         ) {
 
+            loginHandelar(output,input);
 
             Server.jButton_Server.addActionListener(new ActionListener() {
                 @Override
@@ -80,5 +92,27 @@ public class MultiThread implements Runnable {
             }
         }
     }// end of run method
+
+
+    public void loginHandelar(DataOutputStream outputStream , DataInputStream inputStream) throws IOException{
+        String user = inputStream.readUTF();
+        String [] u = user.split(":");
+        if(userPass.containsKey(u[0])){
+            if(userPass.containsValue(u[1])){
+
+                outputStream.writeBoolean(true);
+                System.out.println("adfa");
+
+            }else {
+                outputStream.writeBoolean(false);
+                System.out.println("af");
+            }
+
+        }else {
+            outputStream.writeBoolean(false);
+        }
+
+
+    }
 
 }// end of class

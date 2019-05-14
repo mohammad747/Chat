@@ -3,14 +3,20 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 
 public class Server extends javax.swing.JFrame {
 
 
+
+
+
+
     // constructor
     public Server() {
         initComponents();
+
     }
 
 
@@ -105,13 +111,13 @@ public class Server extends javax.swing.JFrame {
         server.setVisible(true);
 
 
-        try (ServerSocket serverSocket = new ServerSocket(20000)) {
+        try (ServerSocket serverSocket = new ServerSocket(8818)) {
 
             //infinite loop for listening for ever
             while (true) {
 
                 Socket socket = serverSocket.accept();
-                Thread thread = new Thread(new MultiThread(socket));
+                Thread thread = new Thread(new ServerWorker(socket));
                 jTextArea_Server.append("\nClient Connected");
 
                 thread.start();
@@ -120,33 +126,6 @@ public class Server extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-//        try(ServerSocket serverSocket = new ServerSocket(20000)){
-//            while (true) {
-//                Socket socket = serverSocket.accept();
-//
-//                DataInputStream input = new DataInputStream(socket.getInputStream());
-//                DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-//
-//                server.buttonAction(output);
-//                while (true) {
-//                    String messageIn = input.readUTF();
-//                    jTextArea_Server.setText(jTextArea_Server.getText() + "\nClient: " + messageIn);
-//                    if (messageIn == "exit") {
-//                        break;
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }catch (IOException e){
-//
-//            e.printStackTrace();
-//        }
 
 
     } //end of main method
