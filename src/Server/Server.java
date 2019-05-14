@@ -1,16 +1,14 @@
 package Server;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 
 public class Server extends javax.swing.JFrame {
-
-
-
-
 
 
     // constructor
@@ -103,32 +101,76 @@ public class Server extends javax.swing.JFrame {
 //
 //    }
 
+    private static Socket lastSocket;
+
+    public static Socket getLastSocket() {
+        return lastSocket;
+    }
+
+    public static void setLastSocket(Socket socket) {
+        lastSocket = socket;
+    }
+
     //main method
     public static void main(String args[]) {
 
         //create object from server class and set visible true
         Server server = new Server();
         server.setVisible(true);
+        setListener();
 
 
-        try (ServerSocket serverSocket = new ServerSocket(8818)) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try (ServerSocket serverSocket = new ServerSocket(8818)) {
+                        //infinite loop for listening for ever
+                        while (true) {
+                            Socket socket = null;
+                            try {
+                                socket = serverSocket.accept();
+                                new Thread(new ServerWorker(socket)).start();
+                                //jTextArea_Server.append("\nClient Connected");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            lastSocket = socket;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-            //infinite loop for listening for ever
-            while (true) {
 
-                Socket socket = serverSocket.accept();
-                Thread thread = new Thread(new ServerWorker(socket));
-                jTextArea_Server.append("\nClient Connected");
+            thread.start();
 
-                thread.start();
+} //end of main method
 
+
+    private static void setListener() {
+        jButton_Server.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String messageOut = Server.jTextField_Server.getText();
+                Server.jTextArea_Server.append("\nServer: " + messageOut);
+
+                try (
+                        DataOutputStream output = new DataOutputStream(lastSocket.getOutputStream())
+                ) {
+                    output.writeUTF(messageOut);
+                    output.flush();
+
+                } catch (
+                        IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+        });
 
-    } //end of main method
+    }
 
     // Variables declaration - do not modify
     static javax.swing.JButton jButton_Server;

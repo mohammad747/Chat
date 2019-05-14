@@ -19,7 +19,7 @@ public class Client extends javax.swing.JFrame {
     }
 
     //constructor
-    public Client(Socket socket){
+    public Client(Socket socket) {
 
     }
 
@@ -76,7 +76,7 @@ public class Client extends javax.swing.JFrame {
     }// </editor-fold>
 
     // added action to button
-    static void buttonAction(DataOutputStream output){
+    static void buttonAction(DataOutputStream output) {
         jButton_client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,40 +99,45 @@ public class Client extends javax.swing.JFrame {
 
     } // end of main method
 
-    public void sendMessage(Socket socket, DataInputStream input, DataOutputStream output) throws IOException{
+    public void sendMessage(Socket socket, DataInputStream input, DataOutputStream output) throws IOException {
 
-            //call buttonAction method of Client Class
-            this.buttonAction(output);
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
+        //call buttonAction method of Client Class
+        this.buttonAction(output);
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    while (input.available() > 0) {
 
                         // assign value of input to a string variable
                         String messageIn = null;
-                        try {
-                            messageIn = input.readUTF();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        jTextArea_client.setText(jTextArea_client.getText() + "\nServer: " + messageIn);
-                        System.out.println(Thread.currentThread().getName());
 
-                        if(messageIn.equals("exit")){
-                            break;
+                        messageIn = input.readUTF();
+                        Thread.sleep(2000);
+
+                        if (messageIn != null) {
+                            jTextArea_client.setText(jTextArea_client.getText() + "\nServer: " + messageIn);
+                            System.out.println(Thread.currentThread().getName());
+
+                            if (messageIn.equals("exit")) {
+                                break;
+                            }
                         }
                     }
+                } catch (IOException | InterruptedException e) {
+                    //e.printStackTrace();
                 }
-            });
-            thread.start();
-            
+            }
+        });
+        thread.start();
     }
 
-    // Variables declaration - do not modify
-     static javax.swing.JButton jButton_client;
-     static javax.swing.JScrollPane jScrollPane1;
-     static javax.swing.JTextArea jTextArea_client;
-     static javax.swing.JTextField jTextField_client;
-    // End of variables declaration
-}
+                // Variables declaration - do not modify
+        static javax.swing.JButton jButton_client;
+        static javax.swing.JScrollPane jScrollPane1;
+        static javax.swing.JTextArea jTextArea_client;
+        static javax.swing.JTextField jTextField_client;
+        // End of variables declaration
+    }
 

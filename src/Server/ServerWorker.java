@@ -37,36 +37,10 @@ public class ServerWorker implements Runnable {
 
         try (
                 DataInputStream input = new DataInputStream(socket.getInputStream());
-                DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+                DataOutputStream output = new DataOutputStream(socket.getOutputStream())
         ) {
 
             loginHandelar(output, input);
-
-            Server.jButton_Server.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    String messageOut = Server.jTextField_Server.getText();
-                    Server.jTextArea_Server.append("\nServer: " + messageOut);
-
-
-                    try {
-                        for (String user: onlineUsers
-                             ) {
-                            output.writeUTF(user);
-
-                        }
-                        output.writeUTF(messageOut);
-                        output.flush();
-
-                    } catch (
-                            IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-            });
-
 
             String messageOut = "";
 
@@ -78,7 +52,7 @@ public class ServerWorker implements Runnable {
                 output.writeUTF("Echo From Server: " + messageIn);
                 // Server.buttonAction(output);
                 System.out.println(Thread.currentThread().getName());
-
+                Server.setLastSocket(this.socket);
                 if (messageIn.equals("exit")) {
                     break;
                 }
